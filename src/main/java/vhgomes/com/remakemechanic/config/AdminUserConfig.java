@@ -40,6 +40,8 @@ public class AdminUserConfig implements CommandLineRunner {
                     user.setPassword(bCryptPasswordEncoder.encode("123"));
                     user.setRole(Set.of(roleAdmin));
                     user.setName("Victor Hugo Cláudio Gomes");
+                    user.setCpf("001555555555");
+                    user.setTelephone("63999992222");
                     userRepository.save(user);
                 }
         );
