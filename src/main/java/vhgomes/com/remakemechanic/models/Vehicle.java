@@ -2,7 +2,7 @@ package vhgomes.com.remakemechanic.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.Year;
 
 @Entity
 @Table(name = "tb_vehicle")
@@ -18,9 +18,9 @@ public class Vehicle {
     private User client;
     private String brand;
     private String model;
-    private Date carYear;
+    private Year carYear;
 
-    public Vehicle(String placa, User client, String brand, String model, Date carYear) {
+    public Vehicle(String placa, User client, String brand, String model, Year carYear) {
         this.placa = placa;
         this.client = client;
         this.brand = brand;
@@ -63,11 +63,11 @@ public class Vehicle {
         this.model = model;
     }
 
-    public Date getCarYear() {
+    public Year getCarYear() {
         return carYear;
     }
 
-    public void setCarYear(Date carYear) {
+    public void setCarYear(Year carYear) {
         this.carYear = carYear;
     }
 }
