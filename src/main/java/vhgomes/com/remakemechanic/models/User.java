@@ -1,6 +1,8 @@
 package vhgomes.com.remakemechanic.models;
 
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import vhgomes.com.remakemechanic.dtos.LoginUserDTO;
 
 import java.util.Set;
 import java.util.UUID;
@@ -97,7 +99,7 @@ public class User {
         this.role = role;
     }
 
-    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+    public boolean isLoginCorrect(LoginUserDTO loginRequest, BCryptPasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.password(), this.password);
     }
 }

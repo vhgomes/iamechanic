@@ -8,9 +8,11 @@ import java.time.Instant;
 
 
 @Entity
+@Table(name = "tb_tickets")
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ticket_id")
     private long ticketId;
 
     @JoinColumn(name = "user_id")
@@ -18,6 +20,10 @@ public class Ticket {
     private User createdBy;
 
     private String comments;
+
+    @ManyToOne
+    @JoinColumn(name = "repair_id")
+    private Repair repair;
 
     @CreationTimestamp
     private Instant createdAt;
