@@ -9,22 +9,16 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import vhgomes.com.remakemechanic.dtos.ClientsResponseDTO;
-import vhgomes.com.remakemechanic.dtos.CreateUserDTO;
-import vhgomes.com.remakemechanic.dtos.LoginUserDTO;
-import vhgomes.com.remakemechanic.dtos.LoginUserResponseDTO;
+import vhgomes.com.remakemechanic.dtos.*;
 import vhgomes.com.remakemechanic.models.Role;
 import vhgomes.com.remakemechanic.models.User;
 import vhgomes.com.remakemechanic.repositories.RoleRepository;
 import vhgomes.com.remakemechanic.repositories.UserRepository;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.projection.EntityProjection.ProjectionType.DTO;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
@@ -87,10 +81,10 @@ public class UserService {
         return ResponseEntity.ok(new LoginUserResponseDTO(jwtValue, expiresIn));
     }
 
-    public ResponseEntity<?> getAllClients() {
-        var basicRole = roleRepository.findByName(Role.Values.CLIENT.name());
-        var users = userRepository.findUsersByRoleEquals(Set.of(basicRole)).stream().map(
-                user -> new ClientsResponseDTO(
+    public ResponseEntity<Stream<UserResponseDTO>> getAllUsersByRole(Long roleId) {
+        var role = roleRepository.findById(roleId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var users = userRepository.findUsersByRoleEquals(Set.of(role)).stream().map(
+                user -> new UserResponseDTO(
                         user.getUsername(),
                         user.getName(),
                         user.getTelephone(),
