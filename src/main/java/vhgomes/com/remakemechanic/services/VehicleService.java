@@ -24,7 +24,7 @@ public class VehicleService {
     }
 
     public ResponseEntity<Void> createVehicle(CreateVehicleDTO createVehicleDTO, JwtAuthenticationToken jwtAuthenticationToken) {
-        var client = userRepository.findById(UUID.fromString(jwtAuthenticationToken.getName())).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY));
+        var client = userRepository.findById(UUID.fromString(jwtAuthenticationToken.getName())).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         var createdVehicle = new Vehicle();
         createdVehicle.setPlaca(createVehicleDTO.placa());

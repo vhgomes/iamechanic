@@ -2,9 +2,11 @@ package vhgomes.com.remakemechanic.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import vhgomes.com.remakemechanic.dtos.*;
 import vhgomes.com.remakemechanic.services.UserService;
+import vhgomes.com.remakemechanic.services.VehicleService;
 
 import java.util.stream.Stream;
 
@@ -31,5 +33,10 @@ public class UserController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Stream<UserResponseDTO>> getAllUserByRole(@PathVariable Long roleId) {
         return userService.getAllUsersByRole(roleId);
+    }
+
+    @GetMapping("/all-vehicles-by-user")
+    public ResponseEntity<?> getAllVehicleRegistredBy(JwtAuthenticationToken jwtAuthenticationToken) {
+        return userService.getAllVehicleRegistredBy(jwtAuthenticationToken);
     }
 }

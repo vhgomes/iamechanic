@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import vhgomes.com.remakemechanic.dtos.*;
@@ -14,9 +15,11 @@ import vhgomes.com.remakemechanic.models.Role;
 import vhgomes.com.remakemechanic.models.User;
 import vhgomes.com.remakemechanic.repositories.RoleRepository;
 import vhgomes.com.remakemechanic.repositories.UserRepository;
+import vhgomes.com.remakemechanic.repositories.VehicleRepository;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,12 +29,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtEncoder jwtEncoder;
+    private final VehicleRepository vehicleRepository;
 
-    public UserService(RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+    public UserService(RoleRepository roleRepository, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder, VehicleRepository vehicleRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtEncoder = jwtEncoder;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public ResponseEntity<Void> register(CreateUserDTO createUserDTO) {
@@ -94,5 +99,20 @@ public class UserService {
         );
 
         return ResponseEntity.ok(users);
+    }
+
+    public ResponseEntity<?> getAllVehicleRegistredBy(JwtAuthenticationToken jwtAuthenticationToken) {
+        var client = userRepository.findById(UUID.fromString(jwtAuthenticationToken.getName())).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var vehicles = vehicleRepository.findVehicleByClient(client).stream().map(
+                vehicle -> new VehicleReturnDTO(
+                        vehicle.getPlaca(),
+                        new ClientResponseDTO(vehicle.getClient().getName(), vehicle.getClient().getUserId()),
+                        vehicle.getBrand(),
+                        vehicle.getModel(),
+                        vehicle.getCarYear()
+                )
+        );
+
+        return ResponseEntity.ok(vehicles);
     }
 }
