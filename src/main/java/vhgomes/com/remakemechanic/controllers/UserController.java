@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 import vhgomes.com.remakemechanic.dtos.*;
 import vhgomes.com.remakemechanic.services.UserService;
-import vhgomes.com.remakemechanic.services.VehicleService;
+
 
 import java.util.stream.Stream;
 

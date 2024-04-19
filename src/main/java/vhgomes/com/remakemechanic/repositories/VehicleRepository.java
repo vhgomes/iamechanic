@@ -6,7 +6,6 @@ import vhgomes.com.remakemechanic.models.User;
 import vhgomes.com.remakemechanic.models.Vehicle;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {

@@ -1,6 +1,5 @@
 package vhgomes.com.remakemechanic.dtos;
 
-import vhgomes.com.remakemechanic.models.User;
 
 import java.util.UUID;
 
