@@ -9,6 +9,7 @@ import vhgomes.com.remakemechanic.dtos.ClientResponseDTO;
 import vhgomes.com.remakemechanic.dtos.CreateVehicleDTO;
 import vhgomes.com.remakemechanic.dtos.EditVehicleDTO;
 import vhgomes.com.remakemechanic.dtos.VehicleReturnDTO;
+import vhgomes.com.remakemechanic.models.Role;
 import vhgomes.com.remakemechanic.models.Vehicle;
 import vhgomes.com.remakemechanic.repositories.UserRepository;
 import vhgomes.com.remakemechanic.repositories.VehicleRepository;
@@ -67,5 +68,18 @@ public class VehicleService {
         ));
 
         return ResponseEntity.ok(vehicles);
+    }
+
+    public ResponseEntity<?> deleteVehicleById(Long vehicleId, JwtAuthenticationToken jwtAuthenticationToken) {
+        var user = userRepository.findById(UUID.fromString(jwtAuthenticationToken.getName())).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (vehicle.getClient().getUserId() != user.getUserId()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+        vehicleRepository.delete(vehicle);
+
+        return ResponseEntity.ok().build();
     }
 }

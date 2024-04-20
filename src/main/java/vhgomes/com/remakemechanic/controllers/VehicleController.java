@@ -1,6 +1,7 @@
 package vhgomes.com.remakemechanic.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import vhgomes.com.remakemechanic.dtos.CreateVehicleDTO;
@@ -24,6 +25,17 @@ public class VehicleController {
     @PostMapping("/{vehicleId}")
     public ResponseEntity<?> editVehicle(@RequestBody EditVehicleDTO editVehicleDTO, @PathVariable Long vehicleId, JwtAuthenticationToken jwtAuthenticationToken) {
         return vehicleService.editVehicleById(editVehicleDTO, jwtAuthenticationToken, vehicleId);
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<?> getAllVehicles() {
+        return vehicleService.getAllVehicle();
+    }
+
+    @DeleteMapping("/{vehicleId}")
+    public ResponseEntity<?> deleteVehicleById(@PathVariable Long vehicleId, JwtAuthenticationToken jwtAuthenticationToken) {
+        return vehicleService.deleteVehicleById(vehicleId, jwtAuthenticationToken);
     }
 
 }
