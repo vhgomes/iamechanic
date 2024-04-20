@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import vhgomes.com.remakemechanic.dtos.ClientResponseDTO;
 import vhgomes.com.remakemechanic.dtos.CreateVehicleDTO;
+import vhgomes.com.remakemechanic.dtos.EditVehicleDTO;
+import vhgomes.com.remakemechanic.dtos.VehicleReturnDTO;
 import vhgomes.com.remakemechanic.models.Vehicle;
 import vhgomes.com.remakemechanic.repositories.UserRepository;
 import vhgomes.com.remakemechanic.repositories.VehicleRepository;
@@ -35,5 +38,34 @@ public class VehicleService {
         vehicleRepository.save(createdVehicle);
 
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> editVehicleById(EditVehicleDTO editVehicleDTO, JwtAuthenticationToken jwtAuthenticationToken, Long vehicleId) {
+        var client = userRepository.findById(UUID.fromString(jwtAuthenticationToken.getName())).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (vehicle.getClient().getUserId() != client.getUserId()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+        vehicle.setBrand(editVehicleDTO.brand());
+        vehicle.setModel(editVehicleDTO.model());
+        vehicle.setCarYear(editVehicleDTO.carYear());
+
+        vehicleRepository.save(vehicle);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> getAllVehicle() {
+        var vehicles = vehicleRepository.findAll().stream().map(vehicle -> new VehicleReturnDTO(
+                vehicle.getPlaca(),
+                new ClientResponseDTO(vehicle.getClient().getName(), vehicle.getClient().getUserId()),
+                vehicle.getBrand(),
+                vehicle.getModel(),
+                vehicle.getCarYear()
+        ));
+
+        return ResponseEntity.ok(vehicles);
     }
 }
