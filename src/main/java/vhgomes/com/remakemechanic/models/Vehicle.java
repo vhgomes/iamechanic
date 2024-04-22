@@ -20,7 +20,8 @@ public class Vehicle {
     private String model;
     private Year carYear;
 
-    public Vehicle(String placa, User client, String brand, String model, Year carYear) {
+    public Vehicle(Long vehicleId, String placa, User client, String brand, String model, Year carYear) {
+        this.vehicleId = vehicleId;
         this.placa = placa;
         this.client = client;
         this.brand = brand;
@@ -29,6 +30,14 @@ public class Vehicle {
     }
 
     public Vehicle() {
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
     public String getPlaca() {

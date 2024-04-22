@@ -9,7 +9,6 @@ import vhgomes.com.remakemechanic.dtos.ClientResponseDTO;
 import vhgomes.com.remakemechanic.dtos.CreateVehicleDTO;
 import vhgomes.com.remakemechanic.dtos.EditVehicleDTO;
 import vhgomes.com.remakemechanic.dtos.VehicleReturnDTO;
-import vhgomes.com.remakemechanic.models.Role;
 import vhgomes.com.remakemechanic.models.Vehicle;
 import vhgomes.com.remakemechanic.repositories.UserRepository;
 import vhgomes.com.remakemechanic.repositories.VehicleRepository;
